@@ -15,9 +15,9 @@ package test
 import (
 	"testing"
 
-	"github.com/nexient-llc/lcaf-component-terratest-common/lib"
-	"github.com/nexient-llc/lcaf-component-terratest-common/types"
-	testimpl "github.com/nexient-llc/tf-azurerm-module_primitive-routetable_subnet_association/tests/testimpl"
+	"github.com/launchbynttdata/lcaf-component-terratest/lib"
+	"github.com/launchbynttdata/lcaf-component-terratest/types"
+	testimpl "github.com/launchbynttdata/tf-azurerm-module_primitive-routetable_subnet_association/tests/testimpl"
 )
 
 const (

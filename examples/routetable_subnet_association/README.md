@@ -16,10 +16,10 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | git::https://github.com/nexient-llc/tf-azurerm-module_primitive-resource_group.git | 0.2.0 |
-| <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | git::https://github.com/nexient-llc/tf-module-resource_name.git | 1.1.0 |
-| <a name="module_route_table"></a> [route\_table](#module\_route\_table) | git::https://github.com/nexient-llc/tf-azurerm-module_primitive-route_table.git | 0.1.0 |
-| <a name="module_network"></a> [network](#module\_network) | git::https://github.com/nexient-llc/tf-azurerm-module_collection-virtual_network.git | 0.2.1 |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-resource_group.git | 1.0.0 |
+| <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | git::https://github.com/launchbynttdata/tf-launch-module_library-resource_name.git | 1.0.0 |
+| <a name="module_route_table"></a> [route\_table](#module\_route\_table) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-route_table.git | 1.0.0 |
+| <a name="module_network"></a> [network](#module\_network) | git::https://github.com/launchbynttdata/tf-azurerm-module_collection-virtual_network.git | 1.0.0 |
 | <a name="module_rttbl_subnet_association"></a> [rttbl\_subnet\_association](#module\_rttbl\_subnet\_association) | ../.. | n/a |
 
 ## Resources
@@ -30,7 +30,7 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_resource_names_map"></a> [resource\_names\_map](#input\_resource\_names\_map) | A map of key to resource\_name that will be used by tf-module-resource\_name to generate resource names | <pre>map(object({<br>    name       = string<br>    max_length = optional(number, 60)<br>  }))</pre> | <pre>{<br>  "resource_group": {<br>    "max_length": 80,<br>    "name": "rg"<br>  },<br>  "route": {<br>    "max_length": 80,<br>    "name": "rt"<br>  },<br>  "route_table": {<br>    "max_length": 80,<br>    "name": "rttbl"<br>  },<br>  "spoke_vnet": {<br>    "max_length": 80,<br>    "name": "spokevnet"<br>  }<br>}</pre> | no |
+| <a name="input_resource_names_map"></a> [resource\_names\_map](#input\_resource\_names\_map) | A map of key to resource\_name that will be used by tf-launch-module\_library-resource\_name to generate resource names | <pre>map(object({<br>    name       = string<br>    max_length = optional(number, 60)<br>  }))</pre> | <pre>{<br>  "resource_group": {<br>    "max_length": 80,<br>    "name": "rg"<br>  },<br>  "route": {<br>    "max_length": 80,<br>    "name": "rt"<br>  },<br>  "route_table": {<br>    "max_length": 80,<br>    "name": "rttbl"<br>  },<br>  "spoke_vnet": {<br>    "max_length": 80,<br>    "name": "spokevnet"<br>  }<br>}</pre> | no |
 | <a name="input_logical_product_family"></a> [logical\_product\_family](#input\_logical\_product\_family) | (Required) Name of the product family for which the resource is created.<br>    Example: org\_name, department\_name. | `string` | `"launch"` | no |
 | <a name="input_logical_product_service"></a> [logical\_product\_service](#input\_logical\_product\_service) | (Required) Name of the product service for which the resource is created.<br>    For example, backend, frontend, middleware etc. | `string` | `"network"` | no |
 | <a name="input_region"></a> [region](#input\_region) | (Required) The location where the resource will be created. Must not have spaces<br>    For example, eastus, westus, centralus etc. | `string` | `"eastus2"` | no |

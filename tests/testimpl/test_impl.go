@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/nexient-llc/lcaf-component-terratest-common/lib/azure/configure"
-	"github.com/nexient-llc/lcaf-component-terratest-common/lib/azure/login"
-	"github.com/nexient-llc/lcaf-component-terratest-common/lib/azure/network"
-	"github.com/nexient-llc/lcaf-component-terratest-common/types"
+	"github.com/launchbynttdata/lcaf-component-terratest/lib/azure/configure"
+	"github.com/launchbynttdata/lcaf-component-terratest/lib/azure/login"
+	"github.com/launchbynttdata/lcaf-component-terratest/lib/azure/network"
+	"github.com/launchbynttdata/lcaf-component-terratest/types"
 	"github.com/stretchr/testify/assert"
 )
 

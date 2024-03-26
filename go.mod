@@ -1,10 +1,10 @@
-module github.com/nexient-llc/tf-azurerm-module_primitive-routetable_subnet_association
+module github.com/launchbynttdata/tf-azurerm-module_primitive-routetable_subnet_association
 
 go 1.21.7
 
 require (
 	github.com/gruntwork-io/terratest v0.46.11
-	github.com/nexient-llc/lcaf-component-terratest-common v1.0.3
+	github.com/launchbynttdata/lcaf-component-terratest v1.0.3
 	github.com/stretchr/testify v1.8.4
 )
 
