@@ -2,43 +2,46 @@ package common
 
 import (
 	"context"
+	"os"
 	"strings"
 	"testing"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v5"
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/launchbynttdata/lcaf-component-terratest/lib/azure/configure"
-	"github.com/launchbynttdata/lcaf-component-terratest/lib/azure/login"
-	"github.com/launchbynttdata/lcaf-component-terratest/lib/azure/network"
 	"github.com/launchbynttdata/lcaf-component-terratest/types"
 	"github.com/stretchr/testify/assert"
 )
 
-const terraformDir string = "../../examples/routetable_subnet_association"
-const varFile string = "test.tfvars"
-
 func TestRouteTableSubnetAssociation(t *testing.T, ctx types.TestContext) {
 
-	envVarMap := login.GetEnvironmentVariables()
-	clientID := envVarMap["clientID"]
-	clientSecret := envVarMap["clientSecret"]
-	tenantID := envVarMap["tenantID"]
-	subscriptionID := envVarMap["subscriptionID"]
-
-	spt, err := login.GetServicePrincipalToken(clientID, clientSecret, tenantID)
-	if err != nil {
-		t.Fatalf("Error getting Service Principal Token: %v", err)
+	subscriptionID := os.Getenv("ARM_SUBSCRIPTION_ID")
+	if len(subscriptionID) == 0 {
+		t.Fatal("ARM_SUBSCRIPTION_ID is not set in the environment variables ")
 	}
 
-	subnetsClient := network.GetSubnetsClient(spt, subscriptionID)
-	routeTableClient := network.GetRouteTablesClient(spt, subscriptionID)
-	terraformOptions := configure.ConfigureTerraform(terraformDir, []string{terraformDir + "/" + varFile})
-	t.Run("IsRouteTableSubnetAssociated", func(t *testing.T) {
-		resourceGroupName := terraform.Output(t, terraformOptions, "resource_group_name")
-		routeTableName := terraform.Output(t, ctx.TerratestTerraformOptions(), "name")
-		vnetNames := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "vnet_names")
-		subnetNames := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "vnet_subnets")
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
 
-		routeTable, err := routeTableClient.Get(context.Background(), resourceGroupName, routeTableName, "")
+	if err != nil {
+		t.Fatalf("Unable to get credentials: %e\n", err)
+	}
+
+	clientFactory, err := armnetwork.NewClientFactory(subscriptionID, cred, nil)
+	if err != nil {
+		t.Fatalf("Unable to get clientFactory: %e\n", err)
+	}
+
+	subnetsClient := clientFactory.NewSubnetsClient()
+	routeTableClient := clientFactory.NewRouteTablesClient()
+
+	resourceGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
+	routeTableName := terraform.Output(t, ctx.TerratestTerraformOptions(), "name")
+	vnetNames := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "vnet_names")
+	subnetNames := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "vnet_subnets")
+
+	t.Run("IsRouteTableSubnetAssociated", func(t *testing.T) {
+
+		routeTable, err := routeTableClient.Get(context.Background(), resourceGroupName, routeTableName, nil)
 		if err != nil {
 			t.Fatalf("Error getting Route Table: %v", err)
 		}
@@ -50,14 +53,14 @@ func TestRouteTableSubnetAssociation(t *testing.T, ctx types.TestContext) {
 			for _, subnetName := range subnetNames {
 				inputSubnetName := strings.Trim(getSubstring(subnetName), "[]")
 
-				subnet, err := subnetsClient.Get(context.Background(), resourceGroupName, vnetName, inputSubnetName, "")
+				subnet, err := subnetsClient.Get(context.Background(), resourceGroupName, vnetName, inputSubnetName, nil)
 				if err != nil {
 					t.Fatalf("Error getting subnet: %v", err)
 				}
 				if subnet.Name == nil {
 					t.Fatalf("Subnet does not exist")
 				}
-				subnetRouteTable := subnet.RouteTable
+				subnetRouteTable := subnet.Properties.RouteTable
 				assert.NotEmpty(t, subnetRouteTable, "Subnet does not have a route table associated.")
 			}
 		}
