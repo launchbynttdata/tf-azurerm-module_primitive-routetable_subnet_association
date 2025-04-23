@@ -30,7 +30,7 @@ output "resource_group_name" {
   description = "The name of the resource group."
 }
 
-output "id" {
-  value       = { for k, v in var.network_map : k => module.rttbl_subnet_association[k].id }
-  description = "The ID of the Subnet with the associated route table."
-}
+# output "id" {
+#   value       = { for k, v in var.network_map : k => module.rttbl_subnet_association[k].id }
+#   description = "The ID of the Subnet with the associated route table."
+# }

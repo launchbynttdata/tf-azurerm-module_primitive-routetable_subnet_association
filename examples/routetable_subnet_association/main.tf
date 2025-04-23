@@ -62,7 +62,7 @@ module "network" {
 module "rttbl_subnet_association" {
   source = "../.."
 
-  for_each = keys(module.network.vnet_subnets)
+  for_each = local.subnet_map
 
   route_table_id = module.route_table.id
   subnet_id      = each.value
