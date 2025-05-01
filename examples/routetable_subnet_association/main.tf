@@ -52,7 +52,7 @@ module "route_table" {
 
 module "network" {
   source  = "terraform.registry.launch.nttdata.com/module_collection/virtual_network/azurerm"
-  version = "~> 1.1.0"
+  version = "~> 1.2.0"
 
   network_map = local.modified_network_map
 
@@ -62,7 +62,7 @@ module "network" {
 module "rttbl_subnet_association" {
   source = "../.."
 
-  for_each = local.subnet_map
+  for_each = module.network.vnet_subnet_name_id_map_flattened
 
   route_table_id = module.route_table.id
   subnet_id      = each.value

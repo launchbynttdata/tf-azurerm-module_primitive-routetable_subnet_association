@@ -12,15 +12,4 @@ locals {
   modified_network_map = {
     for vnet_name, vnet in var.network_map : vnet_name => merge(vnet, local.override_network_attributes_map[vnet_name])
   }
-
-  subnet_map = {
-    for item in flatten([
-      for network_name, network in module.network.vnet_subnet_name_id_map : [
-        for subnet_name, subnet_id in network : {
-          key   = subnet_name
-          value = subnet_id
-        }
-      ]
-    ]) : item.key => item.value
-  }
 }

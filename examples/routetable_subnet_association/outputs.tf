@@ -31,6 +31,6 @@ output "resource_group_name" {
 }
 
 output "id" {
-  value       = { for k, v in local.subnet_map : k => module.rttbl_subnet_association[k].id }
+  value       = { for k, v in module.network.vnet_subnet_name_id_map_flattened : k => module.rttbl_subnet_association[k] }
   description = "The ID of the Subnet with the associated route table."
 }
