@@ -130,31 +130,32 @@ variable "tags" {
 }
 
 variable "network_map" {
-  description = "Map of objects for creating network resources."
+  description = "Map of spoke networks where vnet name is key, and value is object containing attributes to create a network"
   type = map(object({
     resource_group_name = optional(string)
     location            = optional(string)
     vnet_name           = optional(string)
     address_space       = list(string)
-    subnet_names        = list(string)
-    subnet_prefixes     = list(string)
-    bgp_community       = string
+    subnets = map(object({
+      prefix = string
+      delegation = optional(map(object({
+        service_name    = string
+        service_actions = list(string)
+      })), {})
+      service_endpoints                             = optional(list(string), []),
+      private_endpoint_network_policies_enabled     = optional(bool, false)
+      private_link_service_network_policies_enabled = optional(bool, false)
+      network_security_group_id                     = optional(string, null)
+      route_table_id                                = optional(string, null)
+    }))
+    bgp_community = string
     ddos_protection_plan = object(
       {
         enable = bool
         id     = string
       }
     )
-    dns_servers                                           = list(string)
-    nsg_ids                                               = map(string)
-    route_tables_ids                                      = map(string)
-    subnet_delegation                                     = map(map(any))
-    subnet_enforce_private_link_endpoint_network_policies = map(bool)
-    subnet_enforce_private_link_service_network_policies  = map(bool)
-    subnet_service_endpoints                              = map(list(string))
-    tags                                                  = map(string)
-    tracing_tags_enabled                                  = bool
-    tracing_tags_prefix                                   = string
-    use_for_each                                          = bool
+    dns_servers = list(string)
+    tags        = map(string)
   }))
 }
