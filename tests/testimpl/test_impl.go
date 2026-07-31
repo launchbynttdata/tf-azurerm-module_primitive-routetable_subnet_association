@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRouteTableSubnetAssociation(t *testing.T, ctx types.TestContext) {
+func TestComposableRouteTableSubnetAssociation(t *testing.T, ctx types.TestContext) {
 
 	subscriptionID := os.Getenv("ARM_SUBSCRIPTION_ID")
 	if len(subscriptionID) == 0 {

@@ -38,5 +38,5 @@ func TestRouteTableSubnetAssociation(t *testing.T) {
 		}).
 		Build()
 
-	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestRouteTableSubnetAssociation)
+	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestComposableRouteTableSubnetAssociation)
 }

@@ -38,5 +38,5 @@ func TestRouteTableSubnetAssociation(t *testing.T) {
 		}).
 		Build()
 
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestRouteTableSubnetAssociation)
+	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestComposableRouteTableSubnetAssociation)
 }
