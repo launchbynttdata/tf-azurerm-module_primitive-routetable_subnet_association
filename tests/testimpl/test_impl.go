@@ -47,6 +47,10 @@ func TestComposableRouteTableSubnetAssociation(t *testing.T, ctx types.TestConte
 		if routeTable.Name == nil {
 			t.Fatalf("Route Table does not exist")
 		}
+		if routeTable.ID == nil {
+			t.Fatalf("Route Table ID is nil")
+		}
+		expectedRouteTableID := *routeTable.ID
 
 		for _, subnetID := range subnetIDs {
 			parsedSubnetID, err := arm.ParseResourceID(subnetID)
@@ -67,8 +71,9 @@ func TestComposableRouteTableSubnetAssociation(t *testing.T, ctx types.TestConte
 			if subnet.Name == nil {
 				t.Fatalf("Subnet does not exist")
 			}
-			subnetRouteTable := subnet.Properties.RouteTable
-			assert.NotEmpty(t, subnetRouteTable, "Subnet does not have a route table associated.")
+			assert.NotNil(t, subnet.Properties.RouteTable, "Subnet does not have a route table associated.")
+			assert.NotNil(t, subnet.Properties.RouteTable.ID, "Subnet route table ID is nil.")
+			assert.Equal(t, expectedRouteTableID, *subnet.Properties.RouteTable.ID, "Subnet is not associated with the expected route table.")
 		}
 	})
 }
