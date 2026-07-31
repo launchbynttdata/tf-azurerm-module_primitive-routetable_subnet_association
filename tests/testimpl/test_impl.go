@@ -3,9 +3,9 @@ package common
 import (
 	"context"
 	"os"
-	"strings"
 	"testing"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v5"
 	"github.com/gruntwork-io/terratest/modules/terraform"
@@ -36,8 +36,7 @@ func TestComposableRouteTableSubnetAssociation(t *testing.T, ctx types.TestConte
 
 	resourceGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
 	routeTableName := terraform.Output(t, ctx.TerratestTerraformOptions(), "name")
-	vnetNames := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "vnet_names")
-	subnetNames := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "vnet_subnets")
+	subnetIDs := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "subnet_ids")
 
 	t.Run("IsRouteTableSubnetAssociated", func(t *testing.T) {
 
@@ -49,25 +48,27 @@ func TestComposableRouteTableSubnetAssociation(t *testing.T, ctx types.TestConte
 			t.Fatalf("Route Table does not exist")
 		}
 
-		for _, vnetName := range vnetNames {
-			for _, subnetName := range subnetNames {
-				inputSubnetName := strings.Trim(getSubstring(subnetName), "[]")
-
-				subnet, err := subnetsClient.Get(context.Background(), resourceGroupName, vnetName, inputSubnetName, nil)
-				if err != nil {
-					t.Fatalf("Error getting subnet: %v", err)
-				}
-				if subnet.Name == nil {
-					t.Fatalf("Subnet does not exist")
-				}
-				subnetRouteTable := subnet.Properties.RouteTable
-				assert.NotEmpty(t, subnetRouteTable, "Subnet does not have a route table associated.")
+		for _, subnetID := range subnetIDs {
+			parsedSubnetID, err := arm.ParseResourceID(subnetID)
+			if err != nil {
+				t.Fatalf("Error parsing subnet ID %q: %v", subnetID, err)
 			}
+
+			subnet, err := subnetsClient.Get(
+				context.Background(),
+				parsedSubnetID.ResourceGroupName,
+				parsedSubnetID.Parent.Name,
+				parsedSubnetID.Name,
+				nil,
+			)
+			if err != nil {
+				t.Fatalf("Error getting subnet: %v", err)
+			}
+			if subnet.Name == nil {
+				t.Fatalf("Subnet does not exist")
+			}
+			subnetRouteTable := subnet.Properties.RouteTable
+			assert.NotEmpty(t, subnetRouteTable, "Subnet does not have a route table associated.")
 		}
 	})
-}
-
-func getSubstring(input string) string {
-	parts := strings.Split(input, "/")
-	return parts[len(parts)-1]
 }

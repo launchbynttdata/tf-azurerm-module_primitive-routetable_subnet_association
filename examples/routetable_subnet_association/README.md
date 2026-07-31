@@ -45,6 +45,7 @@ No resources.
 | <a name="output_id"></a> [id](#output\_id) | The ID of the Subnet with the associated route table. |
 | <a name="output_name"></a> [name](#output\_name) | The toute table name. |
 | <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The name of the resource group. |
+| <a name="output_subnet_ids"></a> [subnet\_ids](#output\_subnet\_ids) | Flattened map of subnet keys to subnet resource IDs. |
 | <a name="output_vnet_names"></a> [vnet\_names](#output\_vnet\_names) | The Names of the newly created virtual network. |
 | <a name="output_vnet_subnets"></a> [vnet\_subnets](#output\_vnet\_subnets) | The ids of subnets created inside the newly created virtual network. |
 <!-- END_TF_DOCS -->
