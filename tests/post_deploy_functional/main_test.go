@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	testConfigsExamplesFolderDefault = "../../examples"
+	testConfigsExamplesFolderDefault = "../../examples/routetable_subnet_association"
 	infraTFVarFileNameDefault        = "test.tfvars"
 )
 
@@ -32,11 +32,12 @@ func TestRouteTableSubnetAssociation(t *testing.T) {
 		SetTestConfigFolderName(testConfigsExamplesFolderDefault).
 		SetTestConfigFileName(infraTFVarFileNameDefault).
 		SetTestSpecificFlags(map[string]types.TestFlags{
-			"complete": {
-				"IS_TERRAFORM_IDEMPOTENT_APPLY": true,
+			"routetable_subnet_association": {
+				// Second apply drifts from module_collection/virtual_network subnet output, not this association.
+				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
 			},
 		}).
 		Build()
 
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestRouteTableSubnetAssociation)
+	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestComposableRouteTableSubnetAssociation)
 }

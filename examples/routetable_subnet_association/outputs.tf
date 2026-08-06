@@ -20,6 +20,11 @@ output "vnet_subnets" {
   description = "The ids of subnets created inside the newly created virtual network."
 }
 
+output "subnet_ids" {
+  value       = module.network.vnet_subnet_name_id_map_flattened
+  description = "Flattened map of subnet keys to subnet resource IDs."
+}
+
 output "vnet_names" {
   value       = module.network.vnet_names
   description = "The Names of the newly created virtual network."
