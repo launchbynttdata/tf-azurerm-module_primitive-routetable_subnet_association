@@ -34,9 +34,9 @@ func TestComposableRouteTableSubnetAssociation(t *testing.T, ctx types.TestConte
 	subnetsClient := clientFactory.NewSubnetsClient()
 	routeTableClient := clientFactory.NewRouteTablesClient()
 
-	resourceGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
-	routeTableName := terraform.Output(t, ctx.TerratestTerraformOptions(), "name")
-	subnetIDs := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "subnet_ids")
+	resourceGroupName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "resource_group_name")
+	routeTableName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "name")
+	subnetIDs := terraform.OutputMapContext(t, context.Background(), ctx.TerratestTerraformOptions(), "subnet_ids")
 
 	t.Run("IsRouteTableSubnetAssociated", func(t *testing.T) {
 
